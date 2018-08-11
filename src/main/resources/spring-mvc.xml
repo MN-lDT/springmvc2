@@ -15,6 +15,15 @@
     <!-- 开启注解 -->
     <mvc:annotation-driven />
 
+    <!--配置spring mvc的拦截器-->
+    <mvc:interceptors> <!--定义一个拦截器栈，可以定义多个拦截器-->
+        <mvc:interceptor>   <!--定义一个具体的拦截器-->
+            <mvc:mapping path="/controller/**/*"/>  <!--该拦截器针对所有路径下的action-->
+            <!--定义该拦截器使用的拦截处理程序类，必须是HandlerInterceptor的子类-->
+            <bean class="utils.file.validate.ValidationInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
     <!--
         配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理，3.04新增功能，需要重新设置spring-mvc-3.0.xsd
     -->
@@ -31,6 +40,13 @@
         <!-- 这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个 可用的url地址 -->
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
+    </bean>
+    <!--文件上传的spring配置文件上穿的配置支持-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--设置文件上传的最大限制-->
+        <property name="maxUploadSize" value="5242800" />
+        <!--设置每次文件上传占的内存大小-->
+        <property name="maxInMemorySize" value="2048" />
     </bean>
 
     <!--资源配置文件的统一注入-->

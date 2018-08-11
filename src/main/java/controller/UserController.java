@@ -11,6 +11,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import service.UserService;
 
 import javax.annotation.Resource;
@@ -32,17 +33,21 @@ import java.util.Map;
  * @copyright:长安新生（深圳）金融投资有限公司
  */
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/controller/user")
+public class UserController extends AbstarctAction{
 
     public static Logger logger = Logger.getLogger(UserController.class);
     @Autowired
     private UserService userService;
 
-    @RequestMapping("add")
-    public String add(Emp emp) {  // 此时作为一个参数，并没有实例化
+    @RequestMapping("add")  // 表单的文件选择框的参数名称必须是photo
+    public String add(Emp emp , MultipartFile photo) {  // 此时作为一个参数，并没有实例化
         logger.info(emp);
-        return "";
+        logger.info("***** 文件是否上传  " +photo.isEmpty());
+        logger.info("***** 文件原始名称 " +photo.getOriginalFilename());
+        logger.info("***** 文件大小 " +photo.getSize());
+        logger.info("***** 文件类型 " +photo.getContentType());
+        return null;
     }
     @InitBinder        // 这个注解很重要  代表的是要初始化一个转换器
     public void initBinder(WebDataBinder binder) { // 方法名称自己随便写
@@ -86,5 +91,14 @@ public class UserController {
         request.setAttribute("listUser",listUser);
         logger.info("!!!!!!!!!!!!!!!!!!!!");
         return "allUser";
+    }
+
+    @RequestMapping("/upload")
+    public String upload(){
+        return "emp_add";
+    }
+
+    public String gitFileUploadDir() {
+        return null;
     }
 }
